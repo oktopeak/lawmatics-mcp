@@ -1,0 +1,85 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.oktopeak/lawmatics-mcp",
+  "description": "Connect Claude to Lawmatics: matters, contacts, pipelines, tasks, events, notes, tags, custom fields, intake forms, invoices.",
+  "repository": {
+    "url": "https://github.com/oktopeak/lawmatics-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@oktopeak/lawmatics-mcp",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "LAWMATICS_ACCESS_TOKEN",
+          "description": "Lawmatics OAuth access token (never expires). Obtain once with `npx @oktopeak/lawmatics-mcp auth`.",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "LAWMATICS_READ_ONLY",
+          "description": "Set to '1' to disable all write tools (create/update/tag/submit). Read-only mode for cautious firms.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "LAWMATICS_EXPERIMENTAL_TOOLS",
+          "description": "Set to '1' to enable experimental tools (set-matter-custom-fields) whose API request shape is not fully documented by Lawmatics.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "LAWMATICS_RATE_LIMIT_PER_MIN",
+          "description": "Client-side request throttle per minute (default: 50, the conservative documented per-firm limit; newer docs say 150).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "LAWMATICS_AUDIT_LOG",
+          "description": "Set to '0' to disable the local JSONL audit log (default path: ~/.lawmatics-mcp/audit.log).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "LAWMATICS_CLIENT_ID",
+          "description": "Only needed for the one-time `auth` command: your Lawmatics developer app client ID.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "LAWMATICS_CLIENT_SECRET",
+          "description": "Only needed for the one-time `auth` command: your Lawmatics developer app client secret.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "LAWMATICS_REDIRECT_PORT",
+          "description": "Local port for the one-time OAuth callback (default: 5678). Must match the app's Callback URL.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "LAWMATICS_API_BASE",
+          "description": "Override the Lawmatics API base URL (default: https://api.lawmatics.com/v1).",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

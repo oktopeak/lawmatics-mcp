@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output
+build/
+
+# Environment & secrets
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# npm pack artifacts
+*.tgz
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
+
+# Test coverage
+coverage/

@@ -1,0 +1,66 @@
+{
+  "name": "@oktopeak/lawmatics-mcp",
+  "version": "1.0.0",
+  "mcpName": "io.github.oktopeak/lawmatics-mcp",
+  "description": "Open-source Model Context Protocol (MCP) server that connects Claude to Lawmatics legal CRM. 30+ tools covering matters, contacts, companies, pipelines, tasks, events, notes, tags, custom fields, intake forms, and invoices. Config-level read-only mode and a local audit log, built for law firms. Built by Oktopeak.",
+  "type": "module",
+  "main": "build/index.js",
+  "bin": {
+    "lawmatics-mcp": "./build/index.js"
+  },
+  "files": [
+    "build",
+    ".env.example",
+    "server.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prebuild": "node -e \"const fs=require('fs');if(fs.existsSync('build')){fs.rmSync('build',{recursive:true})}\"",
+    "build": "tsc && chmod 755 build/index.js",
+    "start": "node build/index.js",
+    "preinspect": "npm run build",
+    "inspect": "npx @modelcontextprotocol/inspector node build/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint:version-sync": "node -e \"const p=require('./package.json');const s=require('./server.json');if(p.version!==s.version)throw new Error('Version mismatch: package.json='+p.version+' server.json='+s.version)\"",
+    "prepublishOnly": "npm run lint:version-sync && npm test && npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "anthropic",
+    "lawmatics",
+    "legal-tech",
+    "law-firm",
+    "legal-ai",
+    "legal-crm",
+    "client-intake",
+    "legal-marketing",
+    "law-firm-automation"
+  ],
+  "author": "Oktopeak <office@oktopeak.com> (https://oktopeak.com)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oktopeak/lawmatics-mcp.git"
+  },
+  "homepage": "https://oktopeak.com/lawmatics-mcp/?utm_source=npm&utm_medium=package&utm_campaign=lawmatics-mcp&utm_content=homepage",
+  "bugs": {
+    "url": "https://github.com/oktopeak/lawmatics-mcp/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^16.6.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^4.1.7"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
