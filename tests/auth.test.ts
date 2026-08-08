@@ -55,11 +55,19 @@ describe("waitForCallback", () => {
     await expect(promise).resolves.toBe("the-code");
   });
 
-  it("rejects when Lawmatics returns an OAuth error", async () => {
+  it("rejects when Lawmatics returns an OAuth error (with matching state)", async () => {
     const { promise } = waitForCallback(PORT, "s");
     const assertion = expect(promise).rejects.toThrow(/access_denied/);
-    await fetch(`http://localhost:${PORT}/callback?error=access_denied`);
+    await fetch(`http://localhost:${PORT}/callback?error=access_denied&state=s`);
     await assertion;
+  });
+
+  it("ignores an error callback with the wrong state (cannot be aborted by others)", async () => {
+    const { promise, close } = waitForCallback(PORT, "right");
+    const res = await fetch(`http://localhost:${PORT}/callback?error=access_denied&state=wrong`);
+    expect(res.status).toBe(400);
+    close();
+    promise.catch(() => undefined);
   });
 
   it("400s on state mismatch and keeps waiting", async () => {

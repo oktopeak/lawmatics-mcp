@@ -28,7 +28,7 @@ export function registerFormTools(server: McpServer): void {
     description: "List submissions for a custom form, each with label/value pairs and the matter it created.",
     schema: {
       form_uuid: z.string().describe("The form's UUID (from list-forms)."),
-      page: z.number().int().min(1).optional(),
+      page: z.coerce.number().int().min(1).optional(),
       fetch_all: z.boolean().optional().describe("Follow pagination (capped at 1,000 records)."),
     },
     handler: ({ form_uuid, ...args }: { form_uuid: string } & ListArgs) =>

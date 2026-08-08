@@ -120,6 +120,19 @@ describe("lawmaticsGetOne", () => {
     mockFetch(jsonResponse({ something: "else" }));
     await expect(lawmaticsGetOne("/users/me")).rejects.toThrow(/Expected a \{data: \.\.\.\} envelope/);
   });
+
+  it("treats {data: null} as not found (404)", async () => {
+    mockFetch(jsonResponse({ data: null }));
+    const err = await lawmaticsGetOne("/prospects/find_by_email/x%40y.com").catch((e) => e);
+    expect(err).toBeInstanceOf(LawmaticsApiError);
+    expect(err.status).toBe(404);
+  });
+
+  it("attributes can never corrupt the normalized string id", () => {
+    const flat = flattenResource({ id: "25", type: "prospect", attributes: { id: 999, first_name: "T" } } as never);
+    expect(flat.id).toBe("25");
+    expect(flat.first_name).toBe("T");
+  });
 });
 
 describe("lawmaticsGetList", () => {
@@ -189,6 +202,19 @@ describe("lawmaticsGetAll (pagination)", () => {
     expect(result.complete).toBe(true);
     expect(result.pages).toBe(1);
   });
+
+  it("resumes from startPage so truncated fetches can continue", async () => {
+    const fetchMock = mockFetchWith((url) => {
+      const page = new URL(url).searchParams.get("page");
+      return jsonResponse(
+        listEnvelope([{ id: page as string, type: "contact", attributes: {} }], { total_pages: 42, total_entries: 1050 })
+      );
+    });
+    const result = await lawmaticsGetAll("/contacts", undefined, 41);
+    expect(result.items.map((i) => i.id)).toEqual(["41", "42"]);
+    expect(result.complete).toBe(true);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
 });
 
 describe("retry behavior", () => {
@@ -205,16 +231,29 @@ describe("retry behavior", () => {
     expect(record.id).toBe("25");
   });
 
-  it("gives up after 5 retries on persistent 429", async () => {
+  it("gives up after 2 retries on persistent 429 (bounded stall)", async () => {
     vi.useFakeTimers();
-    mockFetchWith(() => jsonResponse("", { status: 429, headers: { "Retry-After": "1" } }));
+    const fetchMock = mockFetchWith(() => jsonResponse("", { status: 429, headers: { "Retry-After": "1" } }));
 
     const pending = lawmaticsGetOne("/prospects/25").catch((e) => e);
     await vi.advanceTimersByTimeAsync(10 * 60_000);
     const err = await pending;
     expect(err).toBeInstanceOf(LawmaticsApiError);
     expect(err.status).toBe(429);
-    expect(err.message).toMatch(/after 5 retries/);
+    expect(err.message).toMatch(/after 2 retries/);
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it("caps a huge Retry-After at 60 seconds per wait", async () => {
+    vi.useFakeTimers();
+    mockFetch(
+      jsonResponse("", { status: 429, headers: { "Retry-After": "3600" } }),
+      jsonResponse(PROSPECT_SINGLE)
+    );
+    const pending = lawmaticsGetOne("/prospects/25");
+    await vi.advanceTimersByTimeAsync(61_000);
+    const record = await pending;
+    expect(record.id).toBe("25");
   });
 });
 

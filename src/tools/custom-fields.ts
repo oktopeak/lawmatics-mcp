@@ -32,7 +32,7 @@ export function registerCustomFieldTools(server: McpServer): void {
         custom_fields: z
           .array(
             z.object({
-              id: z.number().int().describe("Custom field ID from list-custom-fields."),
+              id: z.coerce.number().int().describe("Custom field ID from list-custom-fields."),
               value: z
                 .union([z.string(), z.number(), z.boolean(), z.null()])
                 .describe("New value. null clears the field. For list fields use the option ID."),

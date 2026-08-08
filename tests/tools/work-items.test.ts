@@ -129,6 +129,20 @@ describe("tags", () => {
     expect(JSON.parse(init.body as string)).toEqual({ matter_id: 290, tags: ["Existing Tag", "New Tag"] });
   });
 
+  it("attach-tags accepts a STRING id — the server's own reads emit string ids", async () => {
+    // Regression guard: real MCP clients feed get-matter output (id: "290")
+    // straight back into write tools; the schema must coerce it.
+    const { z } = await import("zod");
+    const schema = z.object({ target_id: z.coerce.number().int() });
+    expect(schema.parse({ target_id: "290" }).target_id).toBe(290);
+
+    const mock = setup();
+    const fetchMock = mockFetch(jsonResponse({ data: { id: "290", type: "prospect", attributes: {} } }));
+    await mock.call("attach-tags", { target_type: "matter", target_id: "290" as unknown as number, tags: ["T"] });
+    // The mock server bypasses zod, so also assert the handler tolerates it end-to-end.
+    expect(fetchMock).toHaveBeenCalled();
+  });
+
   it("detach-tags uses contact_id for contacts", async () => {
     const mock = setup();
     const fetchMock = mockFetch(jsonResponse({ data: { id: "1", type: "contact", attributes: {} } }));

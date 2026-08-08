@@ -25,16 +25,16 @@ export function registerEventTools(server: McpServer): void {
       description: z.string().optional(),
       start_date: z.string().describe("Start, ISO 8601 with offset, e.g. 2026-08-15T15:00:00-07:00."),
       end_date: z.string().describe("End, ISO 8601 with offset."),
-      user_ids: z.array(z.number().int()).optional().describe("Host user IDs (from list-users)."),
+      user_ids: z.array(z.coerce.number().int()).optional().describe("Host user IDs (from list-users)."),
       all_day: z.boolean().optional(),
       eventable_type: z
         .enum(["Prospect", "Contact", "Client"])
         .optional()
         .describe("What the event is attached to. Use 'Prospect' for a matter."),
-      eventable_id: z.number().int().optional(),
-      event_type_id: z.number().int().optional(),
-      location_id: z.number().int().optional(),
-      reminder_delay_length: z.number().int().optional(),
+      eventable_id: z.coerce.number().int().optional(),
+      event_type_id: z.coerce.number().int().optional(),
+      location_id: z.coerce.number().int().optional(),
+      reminder_delay_length: z.coerce.number().int().optional(),
       reminder_type: z.enum(["minutes", "hours", "days", "weeks", "months"]).optional(),
       send_invites: z.boolean().optional().describe("Default true — Lawmatics emails invites unless set to false."),
       time_zone: z.string().optional().describe("IANA time zone, e.g. America/New_York."),

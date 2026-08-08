@@ -52,6 +52,13 @@
           "isSecret": false
         },
         {
+          "name": "LAWMATICS_AUDIT_LOG_PATH",
+          "description": "Override the audit log file location (default: ~/.lawmatics-mcp/audit.log). The log contains tool arguments, which can include client data.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
           "name": "LAWMATICS_CLIENT_ID",
           "description": "Only needed for the one-time `auth` command: your Lawmatics developer app client ID.",
           "isRequired": false,

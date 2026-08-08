@@ -71,9 +71,15 @@ export function waitForCallback(
   expectedState: string
 ): { promise: Promise<string>; close: () => void } {
   let server: http.Server;
+  // close() alone leaves speculative keep-alive sockets holding the event loop
+  // open for up to 60s after success — destroy them too.
+  const closeServer = () => {
+    server?.close();
+    server?.closeAllConnections?.();
+  };
   const promise = new Promise<string>((resolve, reject) => {
     const timer = setTimeout(() => {
-      server.close();
+      closeServer();
       reject(new Error("Timed out waiting for the OAuth redirect (5 minutes)."));
     }, AUTH_TIMEOUT_MS);
 
@@ -87,23 +93,30 @@ export function waitForCallback(
       const code = url.searchParams.get("code");
       const state = url.searchParams.get("state");
 
+      // Every branch requires the state to match, including errors — otherwise
+      // any local process could abort an in-progress flow.
+      if (state !== expectedState) {
+        res.writeHead(400, { "Content-Type": "text/html" });
+        res.end("<h2>Invalid callback.</h2><p>State mismatch. Re-run the auth command.</p>");
+        return;
+      }
       if (err) {
         res.writeHead(200, { "Content-Type": "text/html" });
         res.end("<h2>Authorization failed.</h2><p>You can close this tab.</p>");
         clearTimeout(timer);
-        server.close();
+        closeServer();
         reject(new Error(`Lawmatics returned an OAuth error: ${err}`));
         return;
       }
-      if (!code || state !== expectedState) {
+      if (!code) {
         res.writeHead(400, { "Content-Type": "text/html" });
-        res.end("<h2>Invalid callback.</h2><p>Missing code or state mismatch. Re-run the auth command.</p>");
+        res.end("<h2>Invalid callback.</h2><p>Missing authorization code. Re-run the auth command.</p>");
         return;
       }
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end("<h2>Connected to Lawmatics ✔</h2><p>Return to your terminal. You can close this tab.</p>");
       clearTimeout(timer);
-      server.close();
+      closeServer();
       resolve(code);
     });
 
@@ -111,10 +124,11 @@ export function waitForCallback(
       clearTimeout(timer);
       reject(new Error(`Could not listen on port ${port}: ${e.message}. Set LAWMATICS_REDIRECT_PORT to a free port.`));
     });
-    server.listen(port);
+    // Bind loopback only — the callback must never be reachable from the LAN.
+    server.listen(port, "127.0.0.1");
   });
 
-  return { promise, close: () => server?.close() };
+  return { promise, close: closeServer };
 }
 
 export async function runAuthFlow(): Promise<void> {

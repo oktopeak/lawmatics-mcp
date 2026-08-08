@@ -62,7 +62,7 @@ export function registerTool(server: McpServer, opts: RegisterOptions): void {
         // Not-found is data, not a tool failure — the model should treat it as an answer.
         return jsonResult({ error: err.message, not_found: true });
       }
-      const msg = (err as Error).message;
+      const msg = err instanceof Error ? err.message : String(err);
       await auditLog({ tool: opts.name, outcome: "error", args, error: msg });
       return { content: [{ type: "text" as const, text: `Error in ${opts.name}: ${msg}` }], isError: true };
     }
@@ -87,7 +87,10 @@ export const listParamsSchema = {
       "Attribute to filter on. IMPORTANT: the Lawmatics API supports only ONE filter per request. " +
         "Association filters use the _id suffix, e.g. practice_area_id, stage_id, source_id, matter_id, contact_id."
     ),
-  filter_on: z.string().optional().describe("Value to filter for. Required with filter_by unless filter_with is null/not_null."),
+  filter_on: z
+    .union([z.string(), z.number()])
+    .optional()
+    .describe("Value to filter for. Required with filter_by unless filter_with is null/not_null."),
   filter_with: z
     .string()
     .optional()
@@ -114,7 +117,7 @@ export type ListArgs = {
   sort_by?: string;
   sort_order?: "asc" | "desc";
   filter_by?: string;
-  filter_on?: string;
+  filter_on?: string | number;
   filter_with?: string;
   fields?: string;
   fetch_all?: boolean;
@@ -131,13 +134,13 @@ export async function runList(
   args: ListArgs,
   defaults?: { fields?: string; extraParams?: QueryParams }
 ): Promise<ListResult | FetchAllResult> {
-  if (args.filter_by && !args.filter_on && !PRESENCE_OPERATORS.has(args.filter_with ?? "")) {
+  if (args.filter_by && args.filter_on === undefined && !PRESENCE_OPERATORS.has(args.filter_with ?? "")) {
     throw new LawmaticsApiError(
       422,
       "filter_by was given without filter_on. Provide filter_on, or use filter_with: 'null' / 'not_null' for presence checks."
     );
   }
-  if (args.filter_on && !args.filter_by) {
+  if (args.filter_on !== undefined && !args.filter_by) {
     throw new LawmaticsApiError(422, "filter_on was given without filter_by. Name the attribute to filter on.");
   }
 
@@ -152,7 +155,7 @@ export async function runList(
   };
 
   if (args.fetch_all) {
-    return lawmaticsGetAll(path, params);
+    return lawmaticsGetAll(path, params, args.page ?? 1);
   }
   return lawmaticsGetList(path, { ...params, page: args.page ?? 1 });
 }

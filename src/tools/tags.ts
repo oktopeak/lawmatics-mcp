@@ -7,7 +7,7 @@ const tagTargetSchema = {
   target_type: z
     .enum(["matter", "contact", "company", "task"])
     .describe("What kind of record to tag."),
-  target_id: z.number().int().describe("The record's ID."),
+  target_id: z.coerce.number().int().describe("The record's ID."),
   tags: z.array(z.string()).min(1).describe("Tag names. Nonexistent tags are created automatically on attach."),
 };
 

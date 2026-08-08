@@ -163,12 +163,17 @@ export function flattenResource(resource: JsonApiResource): FlatRecord {
     }
   }
 
-  return {
-    id: String(resource.id),
+  // Attributes may legitimately contain their own `type` (e.g. custom_field
+  // definitions carry the owner type) — let those win over the JSON:API type.
+  // The normalized string `id` is assigned LAST so no attribute can ever
+  // corrupt it (nested objects are exactly where the API leaks numeric ids).
+  const flat: FlatRecord = {
     ...(resource.type ? { type: resource.type } : {}),
     ...attributes,
     ...(Object.keys(related).length ? { related } : {}),
+    id: String(resource.id),
   };
+  return flat;
 }
 
 export type ListMeta = {
@@ -224,12 +229,19 @@ async function request(
   });
 
   if (res.status === 429) {
-    if (retryCount >= 5) {
-      throw new LawmaticsApiError(429, "Rate limited by Lawmatics after 5 retries — try again in a minute.");
+    // Lawmatics sends Retry-After: 60, so each retry is expensive. Cap at 2
+    // retries with waits capped at 60s so a tool call can never hang for
+    // multiple minutes past the MCP client's own timeout.
+    if (retryCount >= 2) {
+      throw new LawmaticsApiError(
+        429,
+        "Rate limited by Lawmatics (429) after 2 retries. The per-firm limit is shared across ALL " +
+          "integrations — wait a minute and retry, or narrow the query."
+      );
     }
     const retryAfter = parseInt(res.headers.get("Retry-After") ?? "", 10);
-    const waitMs = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 60_000;
-    console.error(`[lawmatics-mcp] 429 rate limited — waiting ${waitMs}ms (attempt ${retryCount + 1}/5)`);
+    const waitMs = Math.min(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 60_000, 60_000);
+    console.error(`[lawmatics-mcp] 429 rate limited — waiting ${waitMs}ms (attempt ${retryCount + 1}/2)`);
     await new Promise((r) => setTimeout(r, waitMs));
     return request(method, path, params, body, retryCount + 1);
   }
@@ -275,8 +287,15 @@ function expectEnvelope(body: unknown, path: string): { data: unknown; meta?: un
 /** GET a single-resource endpoint and return the flattened record. */
 export async function lawmaticsGetOne(path: string, params?: QueryParams): Promise<FlatRecord> {
   const envelope = expectEnvelope(await request("GET", path, params), path);
-  if (typeof envelope.data !== "object" || envelope.data === null || Array.isArray(envelope.data)) {
-    throw new LawmaticsApiError(200, `Expected a single resource from ${path} but got a ${typeof envelope.data}.`);
+  if (envelope.data === null) {
+    // Some APIs signal "no match" as {data: null} instead of 404 — treat it the same.
+    throw new LawmaticsApiError(404, `Not found: ${path} (empty data in response)`);
+  }
+  if (typeof envelope.data !== "object" || Array.isArray(envelope.data)) {
+    throw new LawmaticsApiError(
+      200,
+      `Expected a single resource from ${path} but got ${Array.isArray(envelope.data) ? "an array" : typeof envelope.data}.`
+    );
   }
   return flattenResource(envelope.data as JsonApiResource);
 }
@@ -312,12 +331,13 @@ export async function lawmaticsGetList(path: string, params?: QueryParams): Prom
 export const MAX_FETCH_ALL_PAGES = 40;
 
 /**
- * Follow ?page=N pagination to the end (or the safety cap). The completeness
- * flag travels with the result — a truncated list must never look whole.
+ * Follow ?page=N pagination to the end (or the safety cap), starting at
+ * `startPage` so a truncated fetch can be resumed. The completeness flag
+ * travels with the result — a truncated list must never look whole.
  */
-export async function lawmaticsGetAll(path: string, params?: QueryParams): Promise<FetchAllResult> {
+export async function lawmaticsGetAll(path: string, params?: QueryParams, startPage = 1): Promise<FetchAllResult> {
   const items: FlatRecord[] = [];
-  let page = 1;
+  let page = Math.max(1, startPage);
   let pages = 0;
   let totalPages: number | undefined;
   let totalEntries: number | undefined;
@@ -343,7 +363,7 @@ export async function lawmaticsGetAll(path: string, params?: QueryParams): Promi
         incompleteReason:
           `Stopped after ${MAX_FETCH_ALL_PAGES} pages (${items.length} records) with more available` +
           (totalPages ? ` (${totalPages} pages total).` : ".") +
-          " Narrow the query with a filter, or continue with the page parameter.",
+          ` To resume, call again with fetch_all: true and page: ${page + 1} — or narrow the query with a filter.`,
       };
     }
     page++;

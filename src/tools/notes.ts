@@ -23,7 +23,7 @@ export function registerNoteTools(server: McpServer): void {
       notable_type: z
         .enum(["Prospect", "Contact", "Company"])
         .describe("What the note is attached to. Use 'Prospect' for a matter."),
-      notable_id: z.number().int().describe("ID of the record the note is attached to."),
+      notable_id: z.coerce.number().int().describe("ID of the record the note is attached to."),
     },
     handler: (args: Record<string, unknown>) => lawmaticsPost("/notes", args),
   });
@@ -36,7 +36,7 @@ export function registerNoteTools(server: McpServer): void {
     schema: {
       filter_by: z.enum(["matter_id", "contact_id"]).describe("Required by the API."),
       filter_on: z.string().describe("The matter or contact ID."),
-      page: z.number().int().min(1).optional(),
+      page: z.coerce.number().int().min(1).optional(),
       fetch_all: z.boolean().optional().describe("Follow pagination (capped at 1,000 records)."),
     },
     handler: (args: { filter_by: "matter_id" | "contact_id"; filter_on: string; page?: number; fetch_all?: boolean }) =>

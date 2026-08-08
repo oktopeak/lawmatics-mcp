@@ -21,14 +21,14 @@ export function registerTaskTools(server: McpServer): void {
       name: z.string().describe("Task name."),
       description: z.string().optional(),
       due_date: z.string().optional().describe("Due date, ISO 8601 (e.g. 2026-08-15 or 2026-08-15T17:00:00-07:00)."),
-      user_ids: z.array(z.number().int()).optional().describe("User IDs to assign (from list-users)."),
+      user_ids: z.array(z.coerce.number().int()).optional().describe("User IDs to assign (from list-users)."),
       priority: z.enum(["high", "medium", "low"]).optional().describe("Default: low."),
       taskable_type: z
         .enum(["Prospect", "Contact", "Company", "Client"])
         .optional()
         .describe("What the task is attached to. Use 'Prospect' for a matter."),
-      taskable_id: z.number().int().optional().describe("ID of the record the task is attached to."),
-      assigned_by_id: z.number().int().optional(),
+      taskable_id: z.coerce.number().int().optional().describe("ID of the record the task is attached to."),
+      assigned_by_id: z.coerce.number().int().optional(),
       done: z.boolean().optional(),
     },
     handler: (args: Record<string, unknown>) => lawmaticsPost("/tasks", args),
@@ -45,7 +45,7 @@ export function registerTaskTools(server: McpServer): void {
       due_date: z.string().optional().describe("ISO 8601 date or datetime."),
       done: z.boolean().optional(),
       priority: z.enum(["high", "medium", "low"]).optional(),
-      user_ids: z.array(z.number().int()).optional(),
+      user_ids: z.array(z.coerce.number().int()).optional(),
     },
     handler: ({ task_id, ...body }: { task_id: string } & Record<string, unknown>) =>
       lawmaticsPut(`/tasks/${encodeURIComponent(task_id)}`, body),
