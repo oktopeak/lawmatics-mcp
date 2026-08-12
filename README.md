@@ -164,6 +164,8 @@ The connector is free and stays free. Firms hire us for what's around it: deploy
 
 → **[Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-svc)** · [Book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-call)
 
+→ **Firm-wide deployment:** rolling Claude + this connector out to a whole firm (Claude Cowork, multi-user, security review)? See [Firm Deployment](https://oktopeak.com/services/firm-deployment/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=footer-svc-firm-deployment).
+
 ## Development
 
 ```bash
