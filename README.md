@@ -12,7 +12,7 @@ Connect Claude to your [Lawmatics](https://www.lawmatics.com) legal CRM. Ask Cla
 >
 > → **[See Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=top-tip-svc)** — or [book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=top-tip-call)
 
-**Jump to:** [What it does](#what-it-does) · [Installation](#installation) · [Getting API access](#prerequisites-getting-lawmatics-api-access) · [Available tools](#available-tools) · [Read-only mode](#read-only-mode) · [Security](#security) · [Known API limitations](#known-lawmatics-api-limitations)
+**Jump to:** [What it does](#what-it-does) · [Installation](#installation) · [Getting API access](#prerequisites-getting-lawmatics-api-access) · [Available tools](#available-tools) · [Read-only mode](#read-only-mode) · [Security](#security) · [Known API limitations](#known-lawmatics-api-limitations) · [Other connectors](#other-connectors-by-oktopeak) · [Need it deployed for you?](#need-more-than-the-connector)
 
 ---
 
@@ -153,10 +153,14 @@ File upload/download, time entries and expenses, relationships, task subtasks/co
 
 ## Other connectors by Oktopeak
 
-- [Clio MCP](https://github.com/oktopeak/clio-mcp) — Clio practice management
-- [MyCase MCP](https://github.com/oktopeak/mycase-mcp) — MyCase practice management
-- [Filevine MCP](https://github.com/oktopeak/filevine-mcp) — Filevine case management
-- [IntakeQ MCP](https://github.com/oktopeak/IntakeQ) — IntakeQ / PracticeQ intake (healthcare)
+Each connector has its own overview page on oktopeak.com with setup notes and FAQ:
+
+- [Clio MCP](https://oktopeak.com/clio-mcp/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=xlink-clio): Clio practice management. Source: [github.com/oktopeak/clio-mcp](https://github.com/oktopeak/clio-mcp)
+- [MyCase MCP](https://oktopeak.com/mycase-mcp/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=xlink-mycase): MyCase practice management. Source: [github.com/oktopeak/mycase-mcp](https://github.com/oktopeak/mycase-mcp)
+- [Filevine MCP](https://oktopeak.com/filevine-mcp/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=xlink-filevine): Filevine case management. Source: [github.com/oktopeak/filevine-mcp](https://github.com/oktopeak/filevine-mcp)
+- [IntakeQ MCP](https://github.com/oktopeak/IntakeQ): IntakeQ / PracticeQ intake (healthcare)
+
+Same architecture, same audit logging. All MIT licensed.
 
 ## Need more than the connector?
 
@@ -165,6 +169,17 @@ The connector is free and stays free. Firms hire us for what's around it: deploy
 → **[Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-svc)** · [Book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-call)
 
 → **Firm-wide deployment:** rolling Claude + this connector out to a whole firm (Claude Cowork, multi-user, security review)? See [Firm Deployment](https://oktopeak.com/services/firm-deployment/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=footer-svc-firm-deployment).
+
+Want a polished overview of this connector with FAQ? → [oktopeak.com/lawmatics-mcp/](https://oktopeak.com/lawmatics-mcp/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=footer-hub)
+
+## Supporting this project
+
+This connector is free, MIT licensed, and maintained by [Oktopeak](https://oktopeak.com). It always will be; we don't take donations. If it saved you time, the things that actually help:
+
+- **Star this repo.** It is genuinely how other firms find it.
+- **Tell another firm** running Lawmatics.
+- **[Leave a review](https://clutch.co/profile/oktopeak)** if we helped you directly.
+- Need it deployed, extended, or maintained for your firm? **[Commercial support](https://oktopeak.com/lawmatics-mcp/)**; that is what funds the free work.
 
 ## Development
 
