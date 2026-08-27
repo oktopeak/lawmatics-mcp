@@ -2,6 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.oktopeak/lawmatics-mcp",
   "description": "Connect Claude to Lawmatics: matters, contacts, pipelines, tasks, forms, custom fields, invoices.",
+  "websiteUrl": "https://oktopeak.com/lawmatics-mcp/",
   "repository": {
     "url": "https://github.com/oktopeak/lawmatics-mcp",
     "source": "github"
