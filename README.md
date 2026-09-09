@@ -166,7 +166,7 @@ Same architecture, same audit logging. All MIT licensed.
 
 The connector is free and stays free. Firms hire us for what's around it: deployment on every attorney's machine, scoped credentials, custom workflows ("every morning, list yesterday's new leads by source with intake answers"), integrations Lawmatics doesn't have, and the production software layer when you outgrow Zapier.
 
-→ **[Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-svc)** for the first install · **[Firm Deployment](https://oktopeak.com/services/firm-deployment/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-svc-firm-deployment)** when the whole firm needs it (every attorney as themselves, one audit log, security review) · [Book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-call)
+→ **[Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-svc)** · [Book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-call)
 
 → **Firm-wide deployment:** rolling Claude + this connector out to a whole firm (Claude Cowork, multi-user, security review)? See [Firm Deployment](https://oktopeak.com/services/firm-deployment/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=footer-svc-firm-deployment).
 
