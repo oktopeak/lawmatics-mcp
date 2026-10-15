@@ -10,7 +10,7 @@ Connect Claude to your [Lawmatics](https://www.lawmatics.com) legal CRM. Ask Cla
 >
 > The README below assumes someone comfortable editing a JSON config file. If that's not you or your team, we deploy this for law firms — scoped credentials, read-only mode if you want it, audit log wired in, one custom workflow, training.
 >
-> → **[See Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=top-tip-svc)** — or [book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=top-tip-call)
+> → **Whole firm? The Firm Plan: $300 a month.** Set up in your own cloud, every attorney signs in with their own login, one audit log, one automation built for you each month, no setup fee, cancel any time. → [oktopeak.com/firm-plan/](https://oktopeak.com/firm-plan/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=top-tip-firmplan), or [book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=top-tip-call)
 
 **Jump to:** [What it does](#what-it-does) · [Installation](#installation) · [Getting API access](#prerequisites-getting-lawmatics-api-access) · [Available tools](#available-tools) · [Read-only mode](#read-only-mode) · [Security](#security) · [Known API limitations](#known-lawmatics-api-limitations) · [Other connectors](#other-connectors-by-oktopeak) · [Need it deployed for you?](#need-more-than-the-connector)
 
@@ -166,9 +166,8 @@ Same architecture, same audit logging. All MIT licensed.
 
 The connector is free and stays free. Firms hire us for what's around it: deployment on every attorney's machine, scoped credentials, custom workflows ("every morning, list yesterday's new leads by source with intake answers"), integrations Lawmatics doesn't have, and the production software layer when you outgrow Zapier.
 
-→ **[Guided MCP Setup](https://oktopeak.com/services/mcp-guided-setup/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-svc)** · [Book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-call)
+→ **Whole firm? The Firm Plan: $300 a month.** Set up in your own cloud, every attorney signs in with their own login, one audit log, one automation built for you each month, no setup fee, cancel any time. → [oktopeak.com/firm-plan/](https://oktopeak.com/firm-plan/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-firmplan) · [Book a 30-min call](https://calendly.com/office-oktopeak/30min?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=bottom-call)
 
-→ **Firm-wide deployment:** rolling Claude + this connector out to a whole firm (Claude Cowork, multi-user, security review)? See [Firm Deployment](https://oktopeak.com/services/firm-deployment/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=footer-svc-firm-deployment).
 
 Want a polished overview of this connector with FAQ? → [oktopeak.com/lawmatics-mcp/](https://oktopeak.com/lawmatics-mcp/?utm_source=github&utm_medium=readme&utm_campaign=lawmatics-mcp&utm_content=footer-hub)
 
